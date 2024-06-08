@@ -21,17 +21,15 @@ const api = express();
 api.use(bodyParser.urlencoded({ extended: false }))
 api.use(bodyParser.json())
 api.use(cors({
-    origin:['http://localhost/3000','*']
+    origin:['http://localhost','*']
 }));
 
 
 const dbase_dipasena = require('./config/database_config.js'); 
-dbase_dipasena.query(`CREATE TABLE IF NOT EXISTS climate_kalimantan (
-  timestamp TIMESTAMP NOT NULL,  
-  pyrano_meter FLOAT,
-  wind_direction FLOAT,
-  anemometer FLOAT,
-  rain_gauge FLOAT
+dbase_dipasena.query(`CREATE TABLE IF NOT EXISTS capstone ( 
+  temperature FLOAT,
+  humidity FLOAT,
+  ldr FLOAT
   
  )
   `, function(err, result){
@@ -39,7 +37,7 @@ dbase_dipasena.query(`CREATE TABLE IF NOT EXISTS climate_kalimantan (
   });
 
 
-// API HANLDING FOR PANJANG
+//  API HANLDING FOR PANJANG
 const climate_appRoute = require('./controler/route.js');
 api.use('/', cors(), climate_appRoute);
 

@@ -19,9 +19,8 @@ module.exports = {
     // HTTP HANDLING
     // Respond request to give latest 10 NEW data FOR CARD 
     async getData(req, res) {
-        data = await dbase_rest.query(`SELECT to_char(timestamp, 'DD-MM-YYYY HH24:MI:SS') 
-        as time, pyrano_meter, wind_direction, anemometer, rain_gauge FROM climate_kalimantan 
-        ORDER BY timestamp DESC LIMIT 10`);
+        data = await dbase_rest.query(`SELECT  temperature,humidity,ldr FROM capstone 
+        ORDER BY temperature ASC LIMIT 10`);
     
         res.status(200);
         res.send({
@@ -30,40 +29,40 @@ module.exports = {
         })
         console.log("[REST-API ] GET :10 NEW DATA  ");
     },
-    // Respond request to acummulation rain gauge latest hours
-    async getDataAccumulasiHours(req, res) {
-        // take value from new table accumulation
-        var dataAccumulationHours = await dbase_rest.query(`SELECT to_char(time, 'DD-MM-YYYY HH24:MI:SS') 
-        as time,rain_gauge_hours FROM rain_hours
-        ORDER BY time DESC LIMIT 10`)
+    // // Respond request to acummulation rain gauge latest hours
+    // async getDataAccumulasiHours(req, res) {
+    //     // take value from new table accumulation
+    //     var dataAccumulationHours = await dbase_rest.query(`SELECT to_char(time, 'DD-MM-YYYY HH24:MI:SS') 
+    //     as time,rain_gauge_hours FROM rain_hours
+    //     ORDER BY time DESC LIMIT 10`)
     
-        res.status(200);
-        res.send({
-            count: dataAccumulationHours.rowCount,
-            result: dataAccumulationHours.rows,
-        })
-        console.log("[REST-API ] GET DATA ACCUMULATION 1 HOURS RAIN GAUGE  ");
-    },
-    // Respond request to acummulation rain gauge daily
-    async getDataAccumulasiDay(req, res) {
-        // take value from new table accumulation
-        var dataAccumulationDay = await dbase_rest.query(`SELECT * FROM rain_hours
-        WHERE time BETWEEN (NOW() - INTERVAL '1 day') 
-        AND NOW() ORDER BY time DESC`);
+    //     res.status(200);
+    //     res.send({
+    //         count: dataAccumulationHours.rowCount,
+    //         result: dataAccumulationHours.rows,
+    //     })
+    //     console.log("[REST-API ] GET DATA ACCUMULATION 1 HOURS RAIN GAUGE  ");
+    // },
+    // // Respond request to acummulation rain gauge daily
+    // async getDataAccumulasiDay(req, res) {
+    //     // take value from new table accumulation
+    //     var dataAccumulationDay = await dbase_rest.query(`SELECT * FROM rain_hours
+    //     WHERE time BETWEEN (NOW() - INTERVAL '1 day') 
+    //     AND NOW() ORDER BY time DESC`);
 
-        // akumulasi data rain_gauge 24 jam terakhir 
-        var totalRainGaugeDay = 0;
-        for (var i = 0; i < dataAccumulationDay.rows.length; i++) {
-            totalRainGaugeDay += dataAccumulationDay.rows[i].rain_gauge_hours;
-        }
-        // format totalRainGaugeDay
-        totalRainGaugeDay = parseFloat(totalRainGaugeDay.toFixed(2));
+    //     // akumulasi data rain_gauge 24 jam terakhir 
+    //     var totalRainGaugeDay = 0;
+    //     for (var i = 0; i < dataAccumulationDay.rows.length; i++) {
+    //         totalRainGaugeDay += dataAccumulationDay.rows[i].rain_gauge_hours;
+    //     }
+    //     // format totalRainGaugeDay
+    //     totalRainGaugeDay = parseFloat(totalRainGaugeDay.toFixed(2));
 
-        res.status(200);
-        res.send({
-            totalRainGaugeDaily: totalRainGaugeDay.toFixed(2)
-        })
-        console.log("[REST-API ] GET DATA ACCUMULATION  RAIN GAUGE DAILY ");
-    },
+    //     res.status(200);
+    //     res.send({
+    //         totalRainGaugeDaily: totalRainGaugeDay.toFixed(2)
+    //     })
+    //     console.log("[REST-API ] GET DATA ACCUMULATION  RAIN GAUGE DAILY ");
+    // },
     
 }
